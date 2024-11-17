@@ -1,43 +1,43 @@
 #No. 2
 setwd("E:/Analisis Data")
 getwd()
-data<-read.csv("survey customer.CSV",sep=";",header=TRUE)
-data
+data_survey<-read.csv("survey customer.CSV",sep=";",header=TRUE)
+data_survey
 
 #Check the packaging
-nrow(data)
-ncol(data)
-str(data)
+nrow(data_survey)
+ncol(data_survey)
+str(data_survey)
 
 #Look at the top and the bottom of your data
-head(data)
-tail(data)
+head(data_survey)
+tail(data_survey)
 
 #Check your “n”s
 library(dplyr)
-dim(data)
-data_satisfaction<-data%>%filter(!is.na(Overall.Delivery.Experience))
-data_satisfaction<-data%>%filter(!is.na(Quality.Food))
-dim(data_satisfaction)
+dim(data_survey)
+data_baru<-data_survey%>%filter(!is.na(Overall.Delivery.Experience))
+data_baru<-data_survey%>%filter(!is.na(Quality.Food))
+dim(data_baru)
 
 #Validate with at least one external data source
-summary(data_satisfaction$Quality.Food)
-quantile(data_satisfaction$Quality.Food,seq(0, 1, 0.1))
+summary(data_baru$Quality.Food)
+quantile(data_baru$Quality.Food,seq(0, 1, 0.1))
 
 #Make a plot
 library(ggplot2)
-ggplot(data_satisfaction,aes(Quality.Food,Overall.Delivery.Experience))+geom_abline(colour="green")
+ggplot(data_baru,aes(Quality.Food,Overall.Delivery.Experience))+geom_abline(colour="green")
 
 #Try the easy solution first
-summary(data_satisfaction)
-ggplot(data_satisfaction,aes(Quality.Food))+geom_boxplot(colour="red")
+summary(data_baru)
+ggplot(data_baru,aes(Quality.Food))+geom_boxplot(colour="red")
 
 #Follow up
-y=data_satisfaction$Overall.Delivery.Experience
-x=data_satisfaction$Quality.Food
-lm(y~x,data=data_satisfaction)
+y=data_baru$Overall.Delivery.Experience
+x=data_baru$Quality.Food
+lm(y~x,data=data_baru)
 model=lm(y~x)
 summary(model)
 
 #No. 3
-ggplot(data_satisfaction,aes(x=Overall.Delivery.Experience))+geom_histogram(aes(y=..density..),fill="orange",bins=10,color="red",alpha=0.7)+stat_function(fun=dnorm,args=list(mean(data_satisfaction$Overall.Delivery.Experience,na.rm=TRUE)),color="purple",siize=1.5)+labs(title = "Histogram Data",x="Overall Delivery Experience",y="Density")+theme_minimal()
+ggplot(data_baru,aes(x=Overall.Delivery.Experience))+geom_histogram(aes(y=..density..),fill="orange",bins=10,color="red",alpha=0.7)+stat_function(fun=dnorm,args=list(mean(data_baru$Overall.Delivery.Experience,na.rm=TRUE)),color="purple",siize=1.5)+labs(title = "Histogram Data",x="Overall Delivery Experience",y="Density")+theme_minimal()
