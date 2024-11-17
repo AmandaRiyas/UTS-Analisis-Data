@@ -1,49 +1,43 @@
-# History files
-.Rhistory
-.Rapp.history
+#No. 2
+setwd("E:/Analisis Data")
+getwd()
+data<-read.csv("survey customer.CSV",sep=";",header=TRUE)
+data
 
-# Session Data files
-.RData
-.RDataTmp
+#Check the packaging
+nrow(data)
+ncol(data)
+str(data)
 
-# User-specific files
-.Ruserdata
+#Look at the top and the bottom of your data
+head(data)
+tail(data)
 
-# Example code in package build process
-*-Ex.R
+#Check your “n”s
+library(dplyr)
+dim(data)
+data_satisfaction<-data%>%filter(!is.na(Overall.Delivery.Experience))
+data_satisfaction<-data%>%filter(!is.na(Quality.Food))
+dim(data_satisfaction)
 
-# Output files from R CMD build
-/*.tar.gz
+#Validate with at least one external data source
+summary(data_satisfaction$Quality.Food)
+quantile(data_satisfaction$Quality.Food,seq(0, 1, 0.1))
 
-# Output files from R CMD check
-/*.Rcheck/
+#Make a plot
+library(ggplot2)
+ggplot(data_satisfaction,aes(Quality.Food,Overall.Delivery.Experience))+geom_abline(colour="green")
 
-# RStudio files
-.Rproj.user/
+#Try the easy solution first
+summary(data_satisfaction)
+ggplot(data_satisfaction,aes(Quality.Food))+geom_boxplot(colour="red")
 
-# produced vignettes
-vignettes/*.html
-vignettes/*.pdf
+#Follow up
+y=data_satisfaction$Overall.Delivery.Experience
+x=data_satisfaction$Quality.Food
+lm(y~x,data=data_satisfaction)
+model=lm(y~x)
+summary(model)
 
-# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
-.httr-oauth
-
-# knitr and R markdown default cache directories
-*_cache/
-/cache/
-
-# Temporary files created by R markdown
-*.utf8.md
-*.knit.md
-
-# R Environment Variables
-.Renviron
-
-# pkgdown site
-docs/
-
-# translation temp files
-po/*~
-
-# RStudio Connect folder
-rsconnect/
+#No. 3
+ggplot(data_satisfaction,aes(x=Overall.Delivery.Experience))+geom_histogram(aes(y=..density..),fill="orange",bins=10,color="red",alpha=0.7)+stat_function(fun=dnorm,args=list(mean(data_satisfaction$Overall.Delivery.Experience,na.rm=TRUE)),color="purple",siize=1.5)+labs(title = "Histogram Data",x="Overall Delivery Experience",y="Density")+theme_minimal()
